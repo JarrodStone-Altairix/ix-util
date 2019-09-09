@@ -1,0 +1,29 @@
+{
+  "home" : "C:\\Altairix",
+  "gitRepo" : "Git Repository",
+
+  "adfRepo" : "ADF",
+  "adfCommon" : "Altairix ADF - Common\\src\\com\\altairix\\comm\\adf",
+  "adfServer" : "Altairix ADF - Server\\src\\com\\altairix\\adf",
+  "adfSync" : "Altairix ADF - Sync\\src\\com\\altairix\\adf",
+  "adfAsync" : "Altairix ADF - Async\\src\\com\\altairix\\async\\adf",
+  "adfGWT" : "Altairix ADF - GWT\\src\\com\\altairix\\gwt",
+
+  "bxRepo" : "Brainex",
+  "bxCommon" : "Arrowsmith - Common\\src\\com\\arrowsmith\\comm",
+  "bxServer" : "Arrowsmith - Server\\src\\com\\arrowsmith",
+  "bxSync" : "Arrowsmith - Sync\\src\\com\\arrowsmith",
+  "bxAsync" : "Arrowsmith - Async\\src\\com\\arrowsmith\\async",
+  "bxGWT" : "Arrowsmith - GWT\\src\\com\\arrowsmith\\gwt",
+
+  "bldDir" : "C:\\Users\\Jarrod\\Documents\\website\\generate\\build",
+  "srcDir" : "C:\\Users\\Jarrod\\Documents\\website\\generate\\src",
+
+  "bxServerFile" : "C:\\Altairix\\Workspace\\Oxygen\\Brainex-Local\\Local - ACTS\\src\\AdfServer.properties",
+
+  "adfTemplateDir" : "@AdfTemplate",
+  "bxTemplateDir" : "@BxTemplate",
+
+  "inputTextFile" : "Input.txt",
+  "outputTextFile" : "Output.txt"
+}
