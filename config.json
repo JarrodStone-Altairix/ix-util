@@ -19,7 +19,7 @@
   "bldDir" : "C:\\Users\\Jarrod\\Documents\\website\\generate\\build",
   "srcDir" : "C:\\Users\\Jarrod\\Documents\\website\\generate\\src",
 
-  "bxServerFile" : "C:\\Altairix\\Workspace\\Oxygen\\Brainex-Local\\Local - ACTS\\src\\AdfServer.properties",
+  "bxServerFile" : "C:\\Altairix\\Git Repository\\Brainex-Local\\Local - ACTS\\src\\AdfServer.properties",
 
   "adfTemplateDir" : "@AdfTemplate",
   "bxTemplateDir" : "@BxTemplate",

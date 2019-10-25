@@ -5,7 +5,7 @@ _msg = 'msg'
 _unmatched = 'unmatched'
 
 
-def read_log(filepath, severities, *paths, **kwargs):
+def read_log(filepath, pathtuple, msgtuple, patterntuple, ignorelist):
   """Reads a GAE log and returns them in an array of JSON like objects. If a
   pattern is matched on a data object, but there are messages that are not
   matched or ignored they are added to the resulting object in an array called
@@ -20,22 +20,18 @@ def read_log(filepath, severities, *paths, **kwargs):
       this may or may not exist, msg paths to be copied
     patterntuple : list(output.path.name, Regex Search Pattern)
       patterns to be matched
-    ignorelist : list(output.path.name, Regex Search Pattern)
+    ignorelist : list(str(output.path.name), Regex Search Pattern)
       patterns to be ignored
 
   returns a list of errors and messages that were neither matched nor ignored
   """
   data = ixjson.load(filepath)
 
-  msg_paths = kwargs.get("msg_paths")
-  pattern_pairs = kwargs.get("pattern_pairs")
-  ignore_pairs = kwargs.get("ignore_pairs")
-
   errors = []
   outstanding = []
   for d in data:
 
-    if d['severity'] not in severities:
+    if not d['severity'] == 'ERROR':
       continue
 
     err = {
@@ -43,12 +39,12 @@ def read_log(filepath, severities, *paths, **kwargs):
         _unmatched: []
     }
 
-    for path in paths:
+    for path, name in pathtuple:
       val = ixjson.resolvePath(d, path)
-      err[path] = val
+      err[name] = val
 
     err_msgs = [x for x in d['protoPayload']['line']
-                if x['severity'] in severities]
+                if x['severity'] == 'ERROR']
 
     for name, pattern in patterntuple:
 
@@ -82,12 +78,3 @@ def read_log(filepath, severities, *paths, **kwargs):
         err[_unmatched].append(um)
 
   return errors, outstanding
-
-
-def _read_err_msgs(err_list, pattern_pairs, msg_paths):
-
-  for err_msg in err_list:
-    pass
-
-  for name, pattern in pattern_pairs:
-    pass

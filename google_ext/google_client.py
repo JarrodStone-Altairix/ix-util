@@ -31,7 +31,10 @@ class Google_Client:
             pickle.dump(self.creds, tokens)
 
   def build_drive_service(self):
-    return build('drive', Cfg.version, credentials=self.creds)
+    return build('drive', "v3", credentials=self.creds)
+
+  def build_sheets_service(self):
+    return build('sheets', "v4", credentials=self.creds)
 
   def get_auth_headers(self):
     return {"Authorization": "Bearer " + self.creds.token}

@@ -5,7 +5,7 @@ from aiohttp_requests import requests
 from ix.google_ext.google_client import Google_Client
 
 dl_fmt = "https://docs.google.com/spreadsheets/d/" \
-         "%s/gviz/tq?tqx=out:csv&sheet=%s"
+         "%s/export?format=csv&gid=%s"
 
 
 def get_config():
@@ -20,8 +20,8 @@ def get_sheet_info(srvc_drive, file_id):
       fileId=file_id, supportsTeamDrives=True).execute()
 
 
-async def download_csv(file_id, sheet_name, auth_headers, dst_fp):
-  uri = dl_fmt % (file_id, sheet_name)
+async def download_csv(file_id, gid, auth_headers, dst_fp):
+  uri = dl_fmt % (file_id, gid)
   # print(uri)
   rsp = await requests.get(uri, headers=auth_headers)
   with open(dst_fp, "wb+") as dst_file:
@@ -29,16 +29,17 @@ async def download_csv(file_id, sheet_name, auth_headers, dst_fp):
     dst_file.close()
 
 
-async def download_config(name, file_id, auth_headers, dst_dir):
+async def download_config(name, file_id, gids, auth_headers, dst_dir):
 
   print(f"Starting {name}")
   # Download Question
-  await download_csv(file_id, "Questions", auth_headers,
+  await download_csv(file_id, gids[0], auth_headers,
                      os.path.join(dst_dir, f"{name} - Questions.csv"))
 
   # Download Answers
-  await download_csv(file_id, "Answers", auth_headers,
-                     os.path.join(dst_dir, f"{name} - Answers.csv"))
+  if gids[1]:
+    await download_csv(file_id, gids[1], auth_headers,
+                       os.path.join(dst_dir, f"{name} - Answers.csv"))
   print(f"Update {name} complete")
 
 
@@ -52,14 +53,28 @@ async def update_config_coroutine(identities):
 
   print("Starting Config Update")
   if len(identities) == 1 and identities[0] == "*":
-    for iden, (file_id, dst_dir) in cfg.items():
+    for iden, (file_id, gids, dst_dir) in cfg.items():
       name = get_sheet_info(srvc_drive, file_id)["name"]
-      coroutines.append(download_config(name, file_id, auth_headers, dst_dir))
+      coroutines.append(
+          download_config(name, file_id, gids, auth_headers, dst_dir))
+  elif len(identities) == 1 and identities[0] == "qol":
+    qol = [
+        "anger", "anxiety", "attention", "behaviour", "communication",
+        "completion", "depression", "executive", "extremity", "fatigue",
+        "general", "grief", "headache", "independence", "intro", "memory",
+        "mobility", "pain", "participation", "resilience", "satisfaction",
+        "self-esteem", "stigma", "well-being"]
+    for iden in qol:
+      (file_id, gids, dst_dir) = cfg[iden]
+      name = get_sheet_info(srvc_drive, file_id)["name"]
+      coroutines.append(
+          download_config(name, file_id, gids, auth_headers, dst_dir))
   else:
     for iden in identities:
-      (file_id, dst_dir) = cfg[iden]
+      (file_id, gids, dst_dir) = cfg[iden]
       name = get_sheet_info(srvc_drive, file_id)["name"]
-      coroutines.append(download_config(name, file_id, auth_headers, dst_dir))
+      coroutines.append(
+          download_config(name, file_id, gids, auth_headers, dst_dir))
 
   await asyncio.gather(*coroutines)
   print("Config Update Complete")
