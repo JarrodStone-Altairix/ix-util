@@ -5,24 +5,27 @@ fieldPttrn = re.compile(r"(.*)(\w+)\s+(\w+)\s*(=[\S ]+)?\s*;")
 methodPttrn = re.compile(r"(.*)(\w+)\s+(\w+)\s*\((.*)\)\s*([{;}])")
 
 _dftTypeMap = {
-  "byte":"0",
-  "char":"''",
-  "short":"0",
-  "int":"0",
-  "long":"0",
-  "float":"0",
-  "double":"0",
-  "boolean":"false",
-  "void":"null",
-  "Integer":"0",
-  "Float":"0",
-  "Double":"0",
-  "String":"\"\""
+    "byte": "0",
+    "char": "''",
+    "short": "0",
+    "int": "0",
+    "long": "0",
+    "float": "0",
+    "double": "0",
+    "boolean": "false",
+    "void": "null",
+    "Integer": "0",
+    "Float": "0",
+    "Double": "0",
+    "String": "\"\""
 }
+
+
 def typeDefault(jtype):
   ret = _dftTypeMap.get(jtype)
 
-  return ret if ret != None else "null"
+  return ret if ret is not None else "null"
+
 
 class Field:
 
@@ -38,10 +41,11 @@ class Field:
 
   def toString(self):
     str = self._access + " " + self._fieldType + " " + self._name
-    if not self._value is None:
+    if self._value is not None:
       str += " = " + self._value
 
     return str + ";"
+
 
 class Method:
 
@@ -58,20 +62,21 @@ class Method:
 
   def toString(self):
     tab = Class.tabChar
-    str = tab + self._access + " " 
-    if not self._returnValue is None:
-      str += self._returnValue + " " 
-    str += self._name + "(" 
+    str = tab + self._access + " "
+    if self._returnValue is not None:
+      str += self._returnValue + " "
+    str += self._name + "("
 
     length = len(self._args) - 1
     for i, (fType, fName) in enumerate(self._args):
-      str += fType + " " + fName 
+      str += fType + " " + fName
       if i < length:
         str += ", "
 
-    str += ") {\n" + tab + tab + self.body 
+    str += ") {\n" + tab + tab + self.body
     str += "\n" + tab + "}\n"
-    return str 
+    return str
+
 
 class Enum:
   tabChar = "  "
@@ -84,7 +89,7 @@ class Enum:
     self._enums = []
     self._fields = []
     self._methods = []
-  
+
   def addInterface(self, interface):
     self._interfaces.append(interface)
 
@@ -127,10 +132,10 @@ class Enum:
         str += "),\n"
       else:
         str += ");\n"
-    
+
     if len(self._enums) > 0:
       str += "\n"
-    
+
     for field in self._fields:
       str += tab + field.toString() + "\n"
 
@@ -142,7 +147,7 @@ class Enum:
     str += "}"
 
     return str
-  
+
   def toFile(self, filepath):
     jFile = open(os.path.join(filepath, self._name + ".java"), "w+")
     if self._package is None:
@@ -150,6 +155,7 @@ class Enum:
     else:
       jFile.write("package " + self._package + "\n\n" + self.toString())
     jFile.close()
+
 
 class Class:
   tabChar = "  "
@@ -194,7 +200,7 @@ class Class:
     tab = Class.tabChar
 
     str = ""
-    if not self._package is None:
+    if self._package is not None:
       str += "package " + self._package + ";\n\n"
 
     for imprt in self._imports:
@@ -204,7 +210,7 @@ class Class:
 
     str += self._access + " class " + self._name + " "
     if self._baseClass:
-      str += "extends " + self._baseClass + " " 
+      str += "extends " + self._baseClass + " "
 
     if len(self._interfaces) > 0:
       str += "implements"
@@ -224,7 +230,7 @@ class Class:
       str += nestedClass.toString()
     if len(self._nestedClasses) > 0:
       str += "\n"
-    
+
     for field in self._fields:
       str += tab + field.toString() + "\n"
     if len(self._fields) > 0:
@@ -242,6 +248,7 @@ class Class:
     jFile.write(self.toString())
     jFile.close()
 
+
 def getCorresponding(text, openChar, closeChar):
   i = 0
   for ndx, c in enumerate(text):
@@ -252,6 +259,7 @@ def getCorresponding(text, openChar, closeChar):
       if i <= 0:
         return ndx
 
+
 def _loadField(text):
   m = fieldPttrn.search(text)
 
@@ -261,6 +269,7 @@ def _loadField(text):
     ret = Field(m.group(1), m.group(2), m.group(3), m.group(4))
 
   return ret
+
 
 def _loadMethod(text):
   m = fieldPttrn.search(text)
@@ -277,6 +286,7 @@ def _loadMethod(text):
 
   return ret
 
+
 def _loadEnum(text):
   m = re.search(r"([\w\s]+)\s+enum\s+(\w+)\s+implements\s+([\w<>,\s]+){", text)
   modifier = ""
@@ -288,7 +298,7 @@ def _loadEnum(text):
     ret.addInterface(intr.group(1))
 
   ndx = text.find(";", m.end())
-  for enum in re.finditer(r"(\w+)\s*(?:\((.*)\))?[,;]", text[m.end():ndx+1]):
+  for enum in re.finditer(r"(\w+)\s*(?:\((.*)\))?[,;]", text[m.end():ndx + 1]):
     if enum.group(2) == "":
       ret.addEnum(enum.group(1))
     else:
@@ -296,14 +306,14 @@ def _loadEnum(text):
       ret.addEnum(enum.group(1), eArgs)
 
   st = 0
-  text = text[ndx+1:]
+  text = text[ndx + 1:]
   for m in re.finditer(r"[;{]", text):
     if not fieldPttrn.search(text[st:m.end()]) is None:
       ret.addField(_loadField(text[st:m.end()].strip()))
       st = m.end()
     else:
       methodM = methodPttrn.search(text[st:m.end()])
-      if not methodM is None:
+      if methodM is not None:
         if methodM.group(5) == "{":
           end = getCorresponding(text[st:], "{", "}")
         else:
@@ -314,6 +324,7 @@ def _loadEnum(text):
         st = m.end()
 
   return ret
+
 
 def load(filepath):
   jFile = open(filepath)
@@ -333,19 +344,20 @@ def load(filepath):
 
   st = text.find("public", end)
   end = text.find("{", st)
-  m = re.search(r"((?:public\s+|abstract\s+|static\s+|final\s+){1,})class", text[st:end])
+  m = re.search(
+      r"((?:public\s+|abstract\s+|static\s+|final\s+){1,})class", text[st:end])
   jClass._access = m.group(1).strip()
   m = re.search(r"extends\s+(\w+)", text[st:end])
 
-  if not m is None:
+  if m is not None:
     jClass.setBaseClass(m.group(1))
   m = re.search(r"implements\s+((?:\w+,?\s*){1,})", text[st:end])
-  if not m is None:
+  if m is not None:
     for match in re.finditer(r"(\w+),?", m.group(1)):
       jClass.addInterface(match.group(1))
 
   st = 0
-  text = text[text.find("{", end)+1:]
+  text = text[text.find("{", end) + 1:]
   enumPttrn = re.compile(r"\s+enum\s+")
   classPttrn = re.compile(r"\s+class\s+")
   for m in re.finditer(r"[{;]", text):

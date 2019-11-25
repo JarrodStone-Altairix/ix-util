@@ -11,6 +11,13 @@ def cli():
 
 
 @cli.command()
+def pull_all():
+  ixgit.adf_repo.git.pull()
+  ixgit.bx_repo.git.pull()
+  ixgit.local_repo.git.pull()
+
+
+@cli.command()
 @click.argument("src", type=click.STRING)
 @click.argument("dst", type=click.STRING)
 def rebase(src, dst):

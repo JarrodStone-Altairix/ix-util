@@ -3,6 +3,7 @@ import ix.const as const
 
 adf_repo = git.Repo(const.ADF_REPO)
 bx_repo = git.Repo(const.BX_REPO)
+local_repo = git.Repo(const.LOCAL_REPO)
 remote_name = "origin/"
 
 

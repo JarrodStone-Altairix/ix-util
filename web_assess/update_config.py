@@ -1,18 +1,11 @@
 import os
-import json
 import asyncio
 from aiohttp_requests import requests
 from ix.google_ext.google_client import Google_Client
+from ix.web_assess.core import resolve_identities
 
 dl_fmt = "https://docs.google.com/spreadsheets/d/" \
          "%s/export?format=csv&gid=%s"
-
-
-def get_config():
-  cfg_fp = open(os.path.join(os.path.dirname(__file__), "update_config.json"))
-  cfg = json.load(cfg_fp)
-  cfg_fp.close()
-  return cfg
 
 
 def get_sheet_info(srvc_drive, file_id):
@@ -45,38 +38,16 @@ async def download_config(name, file_id, gids, auth_headers, dst_dir):
 
 async def update_config_coroutine(identities):
   # Setup
-  cfg = get_config()
   client = Google_Client()
   srvc_drive = client.build_drive_service()
   auth_headers = client.get_auth_headers()
-  coroutines = []
 
   print("Starting Config Update")
-  if len(identities) == 1 and identities[0] == "*":
-    for iden, (file_id, gids, dst_dir) in cfg.items():
-      name = get_sheet_info(srvc_drive, file_id)["name"]
-      coroutines.append(
-          download_config(name, file_id, gids, auth_headers, dst_dir))
-  elif len(identities) == 1 and identities[0] == "qol":
-    qol = [
-        "anger", "anxiety", "attention", "behaviour", "communication",
-        "completion", "depression", "executive", "extremity", "fatigue",
-        "general", "grief", "headache", "independence", "intro", "memory",
-        "mobility", "pain", "participation", "resilience", "satisfaction",
-        "self-esteem", "stigma", "well-being"]
-    for iden in qol:
-      (file_id, gids, dst_dir) = cfg[iden]
-      name = get_sheet_info(srvc_drive, file_id)["name"]
-      coroutines.append(
-          download_config(name, file_id, gids, auth_headers, dst_dir))
-  else:
-    for iden in identities:
-      (file_id, gids, dst_dir) = cfg[iden]
-      name = get_sheet_info(srvc_drive, file_id)["name"]
-      coroutines.append(
-          download_config(name, file_id, gids, auth_headers, dst_dir))
-
-  await asyncio.gather(*coroutines)
+  await asyncio.gather(*[
+      download_config(
+          get_sheet_info(srvc_drive, file_id)["name"],
+          file_id, gids, auth_headers, dst_dir)
+      for file_id, gids, dst_dir in resolve_identities(identities)])
   print("Config Update Complete")
 
 

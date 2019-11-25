@@ -14,6 +14,7 @@ BX_SERVER = BX_REPO + "\\Arrowsmith - Server\\src"
 BX_SYNC = BX_REPO + "\\Arrowsmith - Sync\\src"
 BX_ASYNC = BX_REPO + "\\Arrowsmith - Async\\src"
 BX_GWT = BX_REPO + "\\Arrowsmith - GWT\\src"
+LOCAL_REPO = GIT_REPO + "\\Brainex-Local"
 
 BLD_DIR = "C:\\Users\\Jarrod\\Documents\\website\\generate\\build"
 SRC_DIR = "C:\\Users\\Jarrod\\Documents\\website\\generate\\src"

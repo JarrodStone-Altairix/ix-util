@@ -1,5 +1,4 @@
 import ix.const as const
-import ix.config as config
 import ix.code.java as java
 
 
@@ -8,7 +7,7 @@ def generate(className, base, reqArgs, optArgs):
   # Write the class
   javaClass = java.Class("public", className)
 
-  if base is not None:
+  if base is not None and len(base) > 0:
     javaClass.setBaseClass(base)
 
   # Builder static method
@@ -47,4 +46,4 @@ def generate(className, base, reqArgs, optArgs):
   javaBuildClass.addMethod(java.Method("public", className, "build",
                                        f"return new {className}(this);"))
   javaClass.addMethod(javaClassCnstr)
-  javaClass.toFile(config.bldDir())
+  return javaClass
