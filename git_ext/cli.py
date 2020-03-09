@@ -1,4 +1,5 @@
 import click
+import ix.const as const
 import ix.git_ext as ixgit
 
 
@@ -8,6 +9,7 @@ def cli():
   # Fetch from upstream for all commands
   ixgit.adf_repo.remote().fetch()
   ixgit.bx_repo.remote().fetch()
+  ixgit.local_repo.remote().fetch()
 
 
 @cli.command()
@@ -18,40 +20,29 @@ def pull_all():
 
 
 @cli.command()
-@click.argument("src", type=click.STRING)
 @click.argument("dst", type=click.STRING)
-def rebase(src, dst):
-  click.echo(f"Rebasing from {src} into {dst}.")
-  ixgit.rebase_changes(ixgit.adf_repo, src, dst)
-  ixgit.rebase_changes(ixgit.bx_repo, src, dst)
+def rebase(dst):
+  src = const.GIT_TRACKING.get(dst)
+  if src is None:
+    click.echo(f"Unable to find source branch for ({dst}).")
+  else:
+    ixgit.rebase_changes(src, dst)
+
+
+@cli.command()
+def rebase_all():
+  ixgit.rebase_changes_all()
 
 
 @cli.command()
 @click.argument("src", type=click.STRING)
-@click.argument("dst", type=click.STRING)
-@click.option("--auto_push", is_flag=True)
-def propagate(src, dst, auto_push):
-  click.echo(f"Propagating changes from {src} into {dst}")
-  ixgit.propagate_changes(ixgit.adf_repo, src, dst, auto_push)
-  ixgit.propagate_changes(ixgit.bx_repo, src, dst, auto_push)
-
-
-@cli.command()
-@click.argument("src", type=click.STRING)
-@click.argument("dst", type=click.STRING)
-@click.option("--auto_push", is_flag=True)
-def update(src, dst, auto_push):
-  click.echo(f"Rebasing from {src} into {dst}.")
-  ixgit.rebase_changes(ixgit.adf_repo, src, dst)
-  ixgit.rebase_changes(ixgit.bx_repo, src, dst)
-
-  click.echo(f"Propagating changes from {dst} into {src}")
-  ixgit.propagate_changes(ixgit.adf_repo, src, dst, auto_push)
-  ixgit.propagate_changes(ixgit.bx_repo, src, dst, auto_push)
-
-  click.echo(f"Rebasing new changes in from {src} into {dst}.")
-  ixgit.rebase_changes(ixgit.adf_repo, src, dst)
-  ixgit.rebase_changes(ixgit.bx_repo, src, dst)
+@click.option("-p", "--push_upstream", is_flag=True)
+def propagate(src, push_upstream):
+  dst = const.GIT_TRACKING.get(src)
+  if dst is None:
+    click.echo(f"Unable to find source branch for ({dst}).")
+  else:
+    ixgit.propagate_changes(src, dst, push_upstream)
 
 
 if __name__ == "__main__":

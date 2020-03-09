@@ -1,5 +1,6 @@
 import os
 import json
+from ix.git_ext.core import propagate_changes
 
 _cfg_fd = open(os.path.join(
     os.path.dirname(__file__), "web_assess_config.json"))
@@ -19,3 +20,11 @@ def resolve_identities(identities):
         "self-esteem", "stigma", "well-being"]
 
   return [_cfg[iden] for iden in identities]
+
+
+def propagate_upstream():
+  branches = ["webAssess-audio", "webAssess-help", "webAssess-clocks"]
+
+  for src, dst in zip(branches, branches[1:]):
+    # print(f"Propagating {src} into {dst}")
+    propagate_changes(src, dst, False)

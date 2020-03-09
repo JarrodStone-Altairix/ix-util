@@ -24,6 +24,10 @@ def to_const(text):
   return text.upper()
 
 
+def to_css(text):
+  return _to_constPattern.sub(r"\1-\2", text)
+
+
 def from_const(text):
   return "".join([s[0].upper() + s[1:].lower() for s in text.split("_")])
 

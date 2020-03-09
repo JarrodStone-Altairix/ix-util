@@ -29,3 +29,8 @@ TODO_Tag = "TODO_JS"
 TODO_Impl = f"// {TODO_Tag} Implement this method"
 
 INDENT = '  '
+
+GIT_TRACKING = {
+    "js": "webAssess-clocks",
+    "js-dev": "webAssess-audio",
+}

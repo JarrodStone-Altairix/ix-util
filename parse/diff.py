@@ -62,12 +62,37 @@ def diffr(left, right):
   return Dir_Cmp_Ext(left, right)
 
 
-# comp = filecmp.dircmp(
-# comp = diffr(
-    # r"C:\Users\Jarrod\Downloads\dir_a",
-    # r"C:\Users\Jarrod\Downloads\dir_b")
+def _prepend_dir(rootdir, dir_list):
+  return [os.path.join(rootdir, d) for d in dir_list]
 
-# comp.report_full_closure()
-# print(comp.subdirs)
-# print(comp)
-# comp.report()
+
+def _diff(dir_a, dir_b):
+  report = filecmp.dircmp(dir_a, dir_b)
+  left_only = report.left_only.copy()
+  right_only = report.right_only.copy()
+  common = report.common.copy()
+  comm_dirs = report.common_dirs.copy()
+
+  while len(comm_dirs) > 0:
+    subdir = comm_dirs.pop()
+
+    report = filecmp.dircmp(
+        os.path.join(dir_a, subdir), os.path.join(dir_b, subdir))
+    left_only.extend(_prepend_dir(subdir, report.left_only))
+    right_only.extend(_prepend_dir(subdir, report.right_only))
+
+    common.extend(_prepend_dir(subdir, report.common))
+    comm_dirs.extend(_prepend_dir(subdir, report.common_dirs))
+
+  # Compare common files
+  comm_same = []
+  comm_diff = []
+  for f in common:
+    f1 = os.path.join(dir_a, f)
+    f2 = os.path.join(dir_b, f)
+    if os.path.isfile(f1) and not filecmp.cmp(f1, f2, False):
+      comm_diff.append(f)
+    else:
+      comm_same.append(f)
+
+  return comm_same, comm_diff, left_only, right_only

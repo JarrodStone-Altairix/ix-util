@@ -1,3 +1,4 @@
+from threading import Thread
 import git
 import ix.const as const
 
@@ -7,21 +8,56 @@ local_repo = git.Repo(const.LOCAL_REPO)
 remote_name = "origin/"
 
 
-def rebase_changes(repo, src_branch, dst_branch):
-  """Be careful with this, since this uses a rebase ensure that the
-  destination branch is not a public branch!"""
+def _rebase_repo(repo, src_branch, dst_branch):
   repo.git.checkout(dst_branch)
   repo.git.rebase(remote_name + src_branch)
   repo.remote().push(force=True)
 
 
-def propagate_changes(repo, root_branch, leaf_branch, auto_push=False):
+def _merge_repo(repo, src_branch, dst_branch, push_upstream):
+  repo.git.checkout(dst_branch)
+  repo.git.merge(remote_name + src_branch)
+  if push_upstream:
+    repo.remote().push()
+
+
+def rebase_changes_all():
+  """Rebase all changes according to current configuration"""
+  for dst, src in const.GIT_TRACKING.items():
+    rebase_changes(src, dst)
+
+
+def rebase_changes(src_branch, dst_branch):
+  """Be careful with this, since this uses a rebase ensure that the
+  destination branch is not a public branch!"""
+  print(f"Rebasing {src_branch} into {dst_branch}")
+  adf_thread = Thread(target=_rebase_repo,
+                      args=(adf_repo, src_branch, dst_branch))
+  bx_thread = Thread(target=_rebase_repo,
+                     args=(bx_repo, src_branch, dst_branch))
+
+  adf_thread.start()
+  bx_thread.start()
+
+  adf_thread.join()
+  bx_thread.join()
+  print(f"Rebased {src_branch} into {dst_branch}")
+
+
+def propagate_changes(src_branch, dst_branch, push_upstream):
   """Ensure that the leaf_branch is not a public branch,
   i.e no one else is working on that branch"""
-  # Push changes upstream
-  repo.git.checkout(root_branch)
-  repo.git.merge(remote_name + root_branch)
-  repo.git.merge(leaf_branch)
+  print(f"Propagating {src_branch} into {dst_branch}")
+  adf_thread = Thread(
+      target=_merge_repo,
+      args=(adf_repo, src_branch, dst_branch, push_upstream))
+  bx_thread = Thread(
+      target=_merge_repo,
+      args=(bx_repo, src_branch, dst_branch, push_upstream))
 
-  if auto_push:
-    repo.remote().push()
+  adf_thread.start()
+  bx_thread.start()
+
+  adf_thread.join()
+  bx_thread.join()
+  print(f"Propagated {src_branch} into {dst_branch}")
