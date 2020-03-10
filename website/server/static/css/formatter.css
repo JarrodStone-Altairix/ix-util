@@ -1,0 +1,64 @@
+.body-header {
+  margin: 10px;
+  border-bottom: 1px solid grey;
+}
+
+.stretch-rows {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+#case-convert-hdr {
+  text-align: center;
+  margin: 5px 0px 0px 0px;
+}
+
+.case-ele {
+  display: inline;
+  margin: 10px;
+}
+
+.case-input {
+  width: 250px;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.tall {
+  height: 500px;
+}
+
+.form-ele {
+  margin: 5px;
+}
+
+.collapsible {
+  height: 30px;
+  transition: height 0.15s ease-in, opacity 0.15s ease-in;
+}
+
+.collapsible.collapse {
+  height: 0px;
+  opacity: 0;
+}
+
+#input-text {
+  white-space: nowrap;
+  resize: none;
+  width: 95%;
+}
+
+#form-cntr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#format-type {
+  width: 250px;
+}

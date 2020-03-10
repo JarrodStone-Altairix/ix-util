@@ -1,0 +1,61 @@
+#basic-workspace {
+  display: grid;
+  grid-template-columns: 300px 2fr 2fr;
+}
+
+.grid-header {
+  margin: 5px;
+  border-bottom: 1px solid grey;
+  text-align: center;
+}
+
+#param-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.param-cntr {
+  width: 280px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  border: 1px solid grey;
+  margin: 5px;
+}
+
+.param-item {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  margin: 5px;
+}
+
+.text-area {
+  resize: none;
+  width: 95%;
+}
+
+.text-area-cntr {
+  display: flex;
+  justify-content: center;
+}
+
+#param-template {
+  height: 200px;
+}
+
+#input-text {
+  height: 450px;
+}
+
+#template-text {
+  height: 450px;
+}
+
+#param-template-header {
+  border-bottom: 1px solid grey;
+}

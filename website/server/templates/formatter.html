@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Altairix Formatter</title>
+  <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+  <link rel="stylesheet" type="text/css" href="static/css/formatter.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="{{url_for('static', filename='js/formatter.js')}}"></script>
+</head>
+
+<body>
+  <div id="header-container">
+    <nav id="nav-menu" role="navigation">
+      <div id="nav-menu-toggle">
+        <!--
+    A fake / hidden checkbox is used as click reciever,
+    so you can use the :checked selector on it.
+    -->
+        <input id="nav-menu-checkbox" type="checkbox" onblur="this.checked = false" />
+
+        <!--
+    Some spans to act as a hamburger.
+
+    They are acting like a real hamburger,
+    not that McDonalds stuff.
+    -->
+        <span></span>
+        <span></span>
+        <span></span>
+
+        <!--
+    Too bad the menu has to be inside of the button
+    but hey, it's pure CSS magic.
+    -->
+        <ul id="nav-menu-list">
+          <a href="index">
+            <li>Home</li>
+          </a>
+          <a href="gen">
+            <li>Generator</li>
+          </a>
+          <a href="sub">
+            <li>Substitution</li>
+          </a>
+          <a href="fmt">
+            <li>Formatter</li>
+          </a>
+          <a href="templater">
+            <li>Templater</li>
+          </a>
+          <a href="builder">
+            <li>Builder</li>
+          </a>
+        </ul>
+      </div>
+    </nav>
+    <h id="header-title">Altairix Help Site</h>
+    <img id="header-logo" src="static/img/logo.png">
+  </div>
+  <div class="background">
+    <div id="form-cntr" class="form-ele">
+      <select id="format-type" class="form-ele" onchange="toggleCollapse($('#pivot-cntr'), this.value!='pivot')">
+        <option value="table" selected>Table</option>
+        <option value="pivot">Pivot</option>
+      </select>
+      <div id="pivot-cntr" class="form-ele collapsible collapse">Pivot Regex:<input id="pivot-regex" class="form-ele"
+          type="text" value="\.\w+\("></div>
+      <input class="form-ele" type="submit" value="Format" style="z-index: 1;"
+        onclick="format($('#format-type').val());">
+    </div>
+    <div>
+      <div class="column body-header">Format Text</div>
+      <div class="column tall">
+        <textarea id="input-text" name="text"></textarea>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

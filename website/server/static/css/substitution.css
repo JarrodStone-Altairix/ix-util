@@ -1,0 +1,54 @@
+.body-header {
+  margin: 10px;
+  border-bottom: 1px solid grey;
+}
+
+.stretch-rows {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+#case-convert-hdr {
+  text-align: center;
+  margin: 5px 0px 0px 0px;
+}
+
+.case-ele {
+  display: inline;
+  margin: 10px;
+}
+
+.case-input {
+  width: 250px;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.tall {
+  height: 600px;
+}
+
+.form-ele {
+  margin: 5px;
+}
+
+#output-text {
+  resize: none;
+  width: 90%;
+}
+
+#submit-cntr {
+  display: flex;
+  justify-content: center;
+}
+
+#input-text {
+  white-space: pre-wrap;
+  resize: none;
+  width: 90%;
+}

@@ -1,0 +1,48 @@
+#background {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.column {
+  border: 1px solid black;
+  margin: 5px;
+}
+
+.grid-two-column {
+    display: grid;
+    text-align: center;
+    grid-gap: 5px 5px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid-three-column {
+    display: grid;
+    text-align: center;
+    grid-gap: 5px 5px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.padding-minor {
+  padding: 10px;
+}
+
+.border-solid {
+  border: 1px solid black;
+}
+
+#output-text {
+  grid-column: span 2;
+  resize: none;
+  height: 400px;
+}
+
+.center-items {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
+#submit-cntr {
+  display: flex;
+  justify-content: center;
+}

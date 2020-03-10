@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Altairix Templater</title>
+  <link rel="stylesheet" type="text/css" href="static/css/styles.css">
+  <link rel="stylesheet" type="text/css" href="static/css/templater.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="{{url_for('static', filename='js/templater.js')}}"></script>
+</head>
+
+<body>
+  <div id="basic-workspace">
+    <div id="header-param-cntr" class="grid-header">
+      <div id="header-param">Parameters</div>
+    </div>
+    <div id="header-input-cntr" class="grid-header">
+      <div id="header-template">Input</div>
+    </div>
+    <div id="header-template-cntr" class="grid-header">
+      <div id="header-template">Template</div>
+    </div>
+    <div id="param-area">
+      <div class="param-cntr">
+        <div id="param-primary-cntr" class="param-item">Match Tag: <input id="param-primary" type="text"></div>
+        <div id="param-create-btn-cntr" class="param-item"><input type="button" value="Create"
+            onclick="createTemplate_Basic()"></div>
+      </div>
+      <div class="param-cntr">
+        <div id="param-template-header" class="param-item">Template Tags</div>
+        <div id="param-template-cntr" class="param-item text-area-cntr"><textarea id="param-template"
+            class="text-area"></textarea></div>
+        <div id="param-filename-cntr" class="param-item">Filename: <input id="param-filename" type="text"
+            value="~@{Template}.java"> </div>
+        <div id="param-template-btn-cntr" class="param-item"><input type="button" value="Apply Template"
+            onclick="applyTemplate_Basic()"></div>
+      </div>
+    </div>
+    <div id="input-text-cntr" class="text-area-cntr">
+      <textarea id="input-text" class="text-area"></textarea>
+    </div>
+    <div id="template-text-cntr" class="text-area-cntr">
+      <textarea id="template-text" class="text-area" placeholder="Templated code will appear here" readonly></textarea>
+    </div>
+  </div>
+</body>
+
+</html>
