@@ -1,6 +1,6 @@
 import os
 import click
-from ix.config import Cfg
+from config.git import Config as Cfg
 import ix.regex as ixre
 import ix.parse.diff as ixdiff
 
@@ -14,7 +14,7 @@ def cli():
 @click.argument("regex_match")
 @click.option("-fr", "--file-regex", type=click.STRING, default=r"\.java",
               help="regex pattern to match files")
-@click.option("-d", "--directory", type=click.STRING, default=Cfg.git_repo,
+@click.option("-d", "--directory", type=click.STRING, default=Cfg.GIT_REPO,
               help="directory to recursively search")
 def find(regex_match, file_regex, directory):
   ixre.findr(directory, file_regex, regex_match)
@@ -22,7 +22,7 @@ def find(regex_match, file_regex, directory):
 
 @cli.command()
 @click.argument("file_regex")
-@click.option("-d", "--directory", type=click.STRING, default=Cfg.git_repo,
+@click.option("-d", "--directory", type=click.STRING, default=Cfg.GIT_REPO,
               help="directory to recursively search")
 def locate(file_regex, directory):
   ixre.findr(directory, file_regex, None)
@@ -33,10 +33,10 @@ def locate(file_regex, directory):
 @click.argument("regex_replace")
 @click.option("-fr", "--file-regex", type=click.STRING, default=r"\.java",
               help="regex pattern to match files")
-@click.option("-d", "--directory", type=click.STRING, default=Cfg.git_repo,
+@click.option("-d", "--directory", type=click.STRING, default=Cfg.GIT_REPO,
               help="directory to recursively search")
 def subr(regex_match, regex_replace,
-         file_regex=r"\.java", directory=Cfg.git_repo):
+         file_regex=r"\.java", directory=Cfg.GIT_REPO):
   ixre.subr(directory, file_regex, regex_match, regex_replace)
 
 
