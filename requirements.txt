@@ -7,7 +7,7 @@ gitdb==4.0.2
 GitPython==3.1.0
 mccabe==0.6.1
 mysql-connector-python==8.0.19
-protobuf==3.6.1
+protobuf==3.18.3
 pycodestyle==2.5.0
 pyflakes==2.1.1
 six==1.14.0
